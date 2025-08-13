@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>RNtoNP</title>
+  <style>
+    :root{ --bg:#f8fafc; --panel:#ffffff; --ink:#0f172a; --muted:#6b7280; --ring:#e5e7eb; --brand:#16c79a; --brand-dark:#0ea77f; }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;height:auto;display:block}
+    /* Wider gutters (narrower content) */
+    .wrap{max-width:900px;margin:0 auto;padding:32px 40px}
+
+    /* HERO — centered with soft gradient */
+    .hero{background:linear-gradient(180deg,#ffffff 0%, #f6f8fb 65%, #eef2f7 100%);border:1px solid var(--ring);border-radius:24px;padding:clamp(24px,6vw,56px);text-align:center;position:relative;overflow:hidden} 
+    .hero::after{content:"";position:absolute;top:-120px;right:-160px;width:720px;height:420px;pointer-events:none;background:
+      radial-gradient(600px 240px at 80% 10%, rgba(22,199,154,.08), transparent 70%),
+      radial-gradient(260px 260px at 110% -10%, rgba(2,8,23,.05), transparent 60%);} 
+    .hero>*{max-width:760px;margin-left:auto;margin-right:auto}
+    .welcome{color:#10b981;font-weight:800;font-size:12px;letter-spacing:.08em;margin-bottom:.25rem}
+    h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:.25rem 0 .6rem;font-weight:800}
+    .hero-sub{margin:0 auto 12px;color:#374151;max-width:720px;text-align:center}
+    .quote{gap:12px;align-items:center;border:1px solid var(--ring);background:#fff;border-radius:12px;padding:12px;margin-top:10px}
+    .avatar{width:36px;height:36px;border-radius:999px;overflow:hidden;border:1px solid var(--ring)}
+    .emailwrap{margin-top:14px}
+    /* Center the ConvertKit form */
+    .hero .formkit-form[data-uid="a1f0c1e15f"]{max-width:760px;margin:8px auto 0 !important}
+    .hero .formkit-form[data-uid="a1f0c1e15f"] .formkit-fields{display:flex!important;gap:12px;align-items:stretch}
+    /* Tighten ConvertKit vertical padding */
+    .hero .formkit-form[data-uid="a1f0c1e15f"] [data-style="clean"]{padding:10px !important; padding-top:10px !important}
+    .hero .formkit-form[data-uid="a1f0c1e15f"][min-width~="700"] [data-style="clean"],
+    .hero .formkit-form[data-uid="a1f0c1e15f"][min-width~="800"] [data-style="clean"]{padding-top:10px !important}
+    .hero .formkit-form[data-uid="a1f0c1e15f"] .formkit-field,
+    .hero .formkit-form[data-uid="a1f0c1e15f"] .formkit-submit{margin:0 !important}
+    @media (max-width:640px){ .hero .formkit-form[data-uid="a1f0c1e15f"] .formkit-fields{flex-direction:column} }
+
+    /* SECTIONS */
+    .section{margin-top:80px}
+    .sec-head{display:block;text-align:center;margin-bottom:32px}
+    .sec-head h2{margin:0;font-size:28px;line-height:1.2}
+    .sec-sub{display:none}
+
+    /* FEATURE ROW */
+    .feature{display:grid;gap:24px}
+    @media (min-width: 960px){ .feature{grid-template-columns: 1.3fr 1fr} }
+    .card{background:var(--panel);border:1px solid var(--ring);border-radius:16px;padding:14px;display:block}
+    .thumb{height:220px;border-radius:12px;overflow:hidden;border:1px solid var(--ring);margin-bottom:12px}
+    .big-title{font-size:24px;margin:0 0 6px}
+    .meta{color:var(--muted);font-size:14px}
+
+    .listy{display:grid;gap:16px}
+    .mini{display:grid;grid-template-columns:100px 1fr;gap:10px;align-items:center;border:1px solid var(--ring);border-radius:12px;padding:10px;background:#fff;display:grid}
+    .mini .img{height:70px;border-radius:10px;overflow:hidden;border:1px solid var(--ring)}
+    .mini .ttl{font-weight:700;font-size:16px}
+
+    /* EDITOR'S PICKS */
+    .grid{display:grid;gap:20px}
+    @media (min-width: 860px){ .grid.cols-2{grid-template-columns:repeat(2,1fr)} }
+    /* Horizontal compact tiles like Backlinko */
+    .tile{background:#fff;border:1px solid var(--ring);border-radius:16px;padding:16px;display:grid;grid-template-columns:96px 1fr;align-items:center}
+    .tile .img{height:88px;width:88px;border-radius:12px;overflow:hidden;border:1px solid var(--ring);margin:0}
+    .tile b{font-size:16px;text-decoration:none;margin-left:12px}
+
+    /* LINK HOVER STATES (no underlines, subtle elevation) */
+    .card,.mini,.tile,.lg-card,.hub{transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease}
+    .card:hover,.mini:hover,.tile:hover,.lg-card:hover,.hub:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(2,8,23,.08);border-color:var(--brand);cursor:pointer}
+    .card:hover .big-title,.mini:hover .ttl,.tile:hover b,.lg-card:hover b,.hub:hover b{color:var(--brand-dark)}
+    .big-title,.ttl{ text-decoration:none }
+
+    /* Force-remove underlines globally (theme-safe) */
+    a, a:link, a:visited{ text-decoration:none !important }
+    .card,.mini,.tile,.lg-card,.hub{ text-decoration:none !important }
+    .card *,.mini *,.tile *,.lg-card *,.hub *{ text-decoration:none !important }
+    .meta,.tile b,.lg-card b,.big-title,.mini .ttl{ text-decoration:none !important }
+
+    /* --- Mid CTA (clean, no box) --- */
+    .tool-cta{background:transparent;border:0;padding:0;margin:96px 0 64px;text-align:center}
+    .tool-cta h3{margin:0 0 16px;font-size:clamp(26px,3.8vw,40px);line-height:1.2}
+    .cta-btn{display:inline-block;font-weight:800;font-size:clamp(18px,2.4vw,22px);padding:18px 32px;border-radius:999px;border:0;text-decoration:none;background:var(--brand);color:#fff;box-shadow:0 10px 28px rgba(22,199,154,.18);transition:transform .15s ease, box-shadow .15s ease}
+    .cta-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(22,199,154,.22) }
+
+    /* LATEST GUIDES */
+    .lg-list{display:grid;gap:16px}
+    @media (min-width: 900px){ .lg-list{grid-template-columns:repeat(3,1fr)} }
+    .lg-card{background:#fff;border:1px solid var(--ring);border-radius:14px;padding:10px;display:block}
+    .lg-card .img{height:160px;border-radius:10px;overflow:hidden;border:1px solid var(--ring);margin-bottom:8px}
+    .lg-card b{display:block;text-decoration:none;font-size:18px}
+
+    /* HUBS */
+    .hubs{display:grid;gap:14px;position:relative;z-index:0;margin-top:16px}
+    .hubs::before{content:none}   
+    @media (min-width: 900px){ .hubs{grid-template-columns:repeat(2,1fr)} }
+    .hub{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:stretch;background:#fff;border:1px solid var(--ring);border-radius:16px;padding:14px}
+    .hub .cover{border-radius:12px;overflow:hidden;border:1px solid #cbd5e1}
+    .hub b{font-size:18px}
+    .hub ul{list-style:none;padding:0;margin:8px 0 0 0}
+    /* Make whole hub clickable AND allow individual item links */
+    .hub{position:relative}
+    .hub .hub-hit{position:absolute;inset:0;border-radius:16px;z-index:1}
+    .hub ul li{margin-bottom:6px}
+    .hub ul a{position:relative;z-index:2;color:inherit;text-decoration:none !important;border-bottom:1px dashed transparent}
+    .hub ul a:hover{color:var(--brand-dark);border-bottom-color:var(--brand-dark)}
+
+    /* MOBILE FIX: stack hub image & text to avoid sideways scroll */
+    @media (max-width: 600px){
+      .hubs{grid-template-columns:1fr}
+      .hub{grid-template-columns:1fr}
+      .hub .cover{height:180px;margin-bottom:8px}
+    }
+      /* Mobile gutter override */
+    @media (max-width:600px){ .wrap{padding:12px 8px} .hero{margin-left:-8px;margin-right:-8px;border-radius:16px;padding:20px} }
+      /* Full-width color bands for section backgrounds */
+    .band{position:relative;padding:48px 0}
+    .band::before{content:"";position:absolute;left:50%;transform:translateX(-50%);width:100vw;top:-32px;bottom:-32px;z-index:-1;background:var(--band-color)}
+    .band-pale{--band-color:#f7f9fc}
+    .band-ice{--band-color:#f6f8fb}
+    .band-cloud{--band-color:#f3f6fb}
+    .band-wash{--band-color:#ffffff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="welcome">WELCOME TO RNtoNP</div>
+      <h1>Your RN to NP Roadmap</h1>
+      <p class="hero-sub"><b>Get your FREE filterable list of 1,698 NP programs</b>. <br> Sort by <i>tuition, online, state, degree, specialty etc.</i></p>
+      <div class="emailwrap">
+        <!-- ConvertKit content-upgrade embed -->
+        <script async data-uid="a1f0c1e15f" src="https://rntonp.kit.com/a1f0c1e15f/index.js"></script>
+      </div>
+      <div class="quote">
+  
+        <div><i>“The Program Finder spreadsheet saved me hours researching schools.”</i><br/><span class="meta">— Kara D., RN → PMHNP student</span></div>
+      </div>
+      
+    </section>
+
+    <!-- FEATURE ROW -->
+    <section class="section band band-wash feature">
+      <!-- Big left card (linkable) -->
+      <a class="card" href="#">
+        <div class="thumb"><img src="https://picsum.photos/seed/salary-calc/1200/600" alt="Salary calculator preview"/></div>
+        <h3 class="big-title">NP Salary Calculator (2025): State‑by‑State + Specialty</h3>
+        <div class="meta">BLS baselines × specialty × setting × experience × education → annual, monthly, hourly, and what‑if chart.</div>
+      </a>
+
+      <!-- Right list of featured tools -->
+      <div class="listy">
+        <a class="mini" href="#">
+          <div class="img"><img src="https://picsum.photos/seed/roi/300/200" alt="ROI timeline"/></div>
+          <div><div class="ttl">RN→NP ROI Timeline</div><div class="meta">Break‑even + net at 1/3/5/10 years.</div></div>
+        </a>
+        <a class="mini" href="#">
+          <div class="img"><img src="https://picsum.photos/seed/quiz/300/200" alt="Specialty quiz"/></div>
+          <div><div class="ttl">NP Specialty Quiz</div><div class="meta">8 questions → top‑fit specialties.</div></div>
+        </a>
+        <a class="mini" href="#">
+          <div class="img"><img src="https://picsum.photos/seed/email/300/200" alt="Negotiation email builder"/></div>
+          <div><div class="ttl">Negotiation Email Builder</div><div class="meta">Counter‑offer + call talking points.</div></div>
+        </a>
+        <a class="mini" href="#">
+          <div class="img"><img src="https://picsum.photos/seed/scope/300/200" alt="Scope quick check"/></div>
+          <div><div class="ttl">Scope‑of‑Practice Quick Check</div><div class="meta">Full/Reduced/Restricted by state.</div></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- EDITOR'S PICKS -->
+    <section class="section band band-pale">
+      <div class="sec-head">
+        <h2>Editor’s Picks</h2>
+        <div class="sec-sub">Hand‑picked tools and guides</div>
+      </div>
+      <div class="grid cols-2">
+        <a class="tile" href="#"><div class="img"><img src="https://picsum.photos/seed/offer/128/128" alt="Offer comparison"/></div><b>Offer Comparison Tool</b></a>
+        <a class="tile" href="#"><div class="img"><img src="https://picsum.photos/seed/shift/128/128" alt="Shift diff calculator"/></div><b>Shift Differential & OT</b></a>
+        <a class="tile" href="#"><div class="img"><img src="https://picsum.photos/seed/1099/128/128" alt="W-2 vs 1099"/></div><b>W‑2 vs 1099 Estimator</b></a>
+        <a class="tile" href="#"><div class="img"><img src="https://picsum.photos/seed/study/128/128" alt="Study planner"/></div><b>Board Study Planner</b></a>
+        <a class="tile" href="#"><div class="img"><img src="https://picsum.photos/seed/cost/128/128" alt="Program cost"/></div><b>Program Cost Estimator</b></a>
+        <a class="tile" href="#"><div class="img"><img src="https://picsum.photos/seed/clinical/128/128" alt="Clinical hours tracker"/></div><b>Clinical Hours Tracker</b></a>
+        
+      </div>
+    </section>
+
+    <!-- MID CTA: direct link to salary calculator (kept real link) -->
+    <section class="section band band-wash tool-cta">
+      <h3>Find NP Salary by State</h3>
+      <a class="cta-btn" href="https://rntonp.com/tools/np-salary-calculator" target="_blank" rel="noopener">Open NP Salary Calculator →</a>
+    </section>
+
+    <!-- LATEST HOW‑TO GUIDES -->
+    <section class="section band band-ice">
+      <div class="sec-head">
+        <h2>Latest How‑To Guides</h2>
+        <div class="sec-sub">New and updated step‑by‑step content</div>
+      </div>
+      <div class="lg-list">
+        <a class="lg-card" href="#"><div class="img"><img src="https://picsum.photos/seed/guide1/600/360" alt="Become an NP guide"/></div><b>How to Become an NP: The 2025 Guide</b><div class="meta">Step‑by‑step from RN to NP, with timelines.</div></a>
+        <a class="lg-card" href="#"><div class="img"><img src="https://picsum.photos/seed/guide2/600/360" alt="NP salary by state"/></div><b>NP Salary by State (2025)</b><div class="meta">BLS means + tips to earn more.</div></a>
+        <a class="lg-card" href="#"><div class="img"><img src="https://picsum.photos/seed/guide3/600/360" alt="NP interview questions"/></div><b>NP Interview Questions & Answers</b><div class="meta">What hiring managers really ask.</div></a>
+        <a class="lg-card" href="#"><div class="img"><img src="https://picsum.photos/seed/guide4/600/360" alt="PMHNP vs FNP"/></div><b>PMHNP vs FNP: Which Fits?</b><div class="meta">Scope, pay, lifestyle tradeoffs.</div></a>
+        <a class="lg-card" href="#"><div class="img"><img src="https://picsum.photos/seed/guide5/600/360" alt="Scope of practice map"/></div><b>Scope of Practice by State</b><div class="meta">Full/Reduced/Restricted map.</div></a>
+        <a class="lg-card" href="#"><div class="img"><img src="https://picsum.photos/seed/guide6/600/360" alt="Negotiate NP offer"/></div><b>How to Negotiate Your First NP Offer</b><div class="meta">Templates, comps, and timing.</div></a>
+      </div>
+    </section>
+
+    <!-- RESOURCE HUBS (mobile-friendly stacked) -->
+    <section class="section band band-cloud">
+      <div class="sec-head">
+        <h2>RNtoNP Resource Hubs</h2>
+        <div class="sec-sub">Deep‑dive collections by topic</div>
+      </div>
+      <div class="hubs">
+        <div class="hub">
+          <a class="hub-hit" href="#" aria-label="Open NP Basics"></a>
+          <div class="cover"><img src="https://picsum.photos/seed/hub-basics/400/520" alt="NP basics"/></div>
+          <div>
+            <b>NP Basics</b>
+            <ul>
+              <li><a href="#">FNP vs AGPCNP vs PMHNP</a></li>
+              <li><a href="#">How long NP school really takes</a></li>
+              <li><a href="#">Clinical hour requirements</a></li>
+              <li><a href="#">Board exam overview (ANCC/AANP)</a></li>
+              <li><a href="#">New‑grad job search</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="hub">
+          <a class="hub-hit" href="#" aria-label="Open Programs & Costs"></a>
+          <div class="cover"><img src="https://picsum.photos/seed/hub-programs/400/520" alt="Programs & costs"/></div>
+          <div>
+            <b>Programs & Costs</b>
+            <ul>
+              <li><a href="#">Top online NP programs</a></li>
+              <li><a href="#">Program Cost Estimator</a></li>
+              <li><a href="#">Scholarships & tuition help</a></li>
+              <li><a href="#">Clinical placement strategies</a></li>
+              <li><a href="#">Program picker wizard</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="hub">
+          <a class="hub-hit" href="#" aria-label="Open Salary & Jobs"></a>
+          <div class="cover"><img src="https://picsum.photos/seed/hub-salary/400/520" alt="Salary & jobs"/></div>
+          <div>
+            <b>Salary & Jobs</b>
+            <ul>
+              <li><a href="#">NP Salary Calculator</a></li>
+              <li><a href="#">Offer Comparison Tool</a></li>
+              <li><a href="#">Negotiation Email Builder</a></li>
+              <li><a href="#">ROI Timeline</a></li>
+              <li><a href="#">W‑2 vs 1099 Estimator</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="hub">
+          <a class="hub-hit" href="#" aria-label="Open Licensure & Scope"></a>
+          <div class="cover"><img src="https://picsum.photos/seed/hub-licensure/400/520" alt="Licensure & scope"/></div>
+          <div>
+            <b>Licensure & Scope</b>
+            <ul>
+              <li><a href="#">Scope‑of‑Practice Quick Check</a></li>
+              <li><a href="#">Licensure Checklist Wizard</a></li>
+              <li><a href="#">Prescriptive authority by state</a></li>
+              <li><a href="#">CEU Planner + Renewal</a></li>
+              <li><a href="#">Credentialing & payer enrollment</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
